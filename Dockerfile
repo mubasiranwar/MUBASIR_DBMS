@@ -1,6 +1,6 @@
 FROM php:8.3-cli
 
-# Install system dependencies
+# Install system packages + Node.js
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -9,28 +9,38 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpng-dev \
     libonig-dev \
-    libxml2-dev
+    libxml2-dev \
+    nodejs \
+    npm
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql zip
 
 # Install Composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Working directory
 WORKDIR /var/www
 
-# Copy project files
+# Copy project
 COPY . .
 
-# Install Composer dependencies
+# Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Set permissions
+# Build frontend (if using Vite)
+RUN if [ -f package.json ]; then npm install && npm run build; fi
+
+# Fix permissions
 RUN chmod -R 775 storage bootstrap/cache
 
-# Expose Railway port
+# Laravel optimization
+RUN php artisan config:clear || true
+RUN php artisan cache:clear || true
+RUN php artisan route:clear || true
+RUN php artisan view:clear || true
+
 EXPOSE 8080
 
-# Start Laravel
-CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8080}"]
+# Start PHP built-in server
+CMD ["sh", "-c", "php -S 0.0.0.0:${PORT:-8080} -t public"]
