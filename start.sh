@@ -2,23 +2,59 @@
 
 echo "=== Laravel Railway Startup ==="
 
+# Create .env from environment variables if it doesn't exist
+if [ ! -f .env ]; then
+    echo "--- Creating .env file..."
+    cat > .env << EOF
+APP_NAME="${APP_NAME:-DBMS Exam Result System}"
+APP_ENV=${APP_ENV:-production}
+APP_KEY=${APP_KEY:-}
+APP_DEBUG=${APP_DEBUG:-false}
+APP_URL=${APP_URL:-http://localhost}
+
+LOG_CHANNEL=stderr
+LOG_LEVEL=error
+
+DB_CONNECTION=mysql
+DB_HOST=${MYSQLHOST:-${DB_HOST:-127.0.0.1}}
+DB_PORT=${MYSQLPORT:-${DB_PORT:-3306}}
+DB_DATABASE=${MYSQLDATABASE:-${DB_DATABASE:-laravel}}
+DB_USERNAME=${MYSQLUSER:-${DB_USERNAME:-root}}
+DB_PASSWORD=${MYSQLPASSWORD:-${DB_PASSWORD:-}}
+
+SESSION_DRIVER=database
+SESSION_LIFETIME=120
+CACHE_STORE=database
+QUEUE_CONNECTION=database
+FILESYSTEM_DISK=local
+BCRYPT_ROUNDS=12
+
+MAIL_MAILER=log
+MAIL_FROM_ADDRESS=hello@example.com
+MAIL_FROM_NAME="${APP_NAME:-App}"
+EOF
+fi
+
 # Generate app key if not set
-php artisan key:generate --force 2>/dev/null || true
+if grep -q "APP_KEY=$" .env || grep -q "APP_KEY= *$" .env; then
+    echo "--- Generating APP_KEY..."
+    php artisan key:generate --force
+fi
 
-# Run migrations (non-fatal)
+# Run database migrations
 echo "--- Running migrations..."
-php artisan migrate --force 2>/dev/null || echo "Migration warning (may already be up to date)"
+php artisan migrate --force 2>&1 || echo "[WARN] Migration issue - continuing..."
 
-# Seed admin user (non-fatal)
+# Seed admin user
 echo "--- Seeding admin..."
-php artisan db:seed --class=AdminSeeder --force 2>/dev/null || echo "Seeder warning (may already exist)"
+php artisan db:seed --class=AdminSeeder --force 2>&1 || echo "[WARN] Seed issue - may already exist"
 
-# Clear caches (don't cache config in case of missing env vars)
-php artisan view:clear 2>/dev/null || true
-php artisan route:clear 2>/dev/null || true
+# Clear views cache only (avoid caching config since env is read at runtime)
+php artisan view:clear 2>&1 || true
+php artisan route:clear 2>&1 || true
 
 # Storage link
-php artisan storage:link 2>/dev/null || true
+php artisan storage:link 2>&1 || true
 
 echo "=== Starting server on port ${PORT:-8000} ==="
 exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
