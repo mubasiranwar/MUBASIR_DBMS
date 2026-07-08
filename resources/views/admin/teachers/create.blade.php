@@ -75,7 +75,7 @@
                             type="password"
                             id="password"
                             name="password"
-                            class="form-control"
+                            class="form-control @error('password') is-invalid @enderror"
                             required>
 
                         @error('password')
@@ -83,19 +83,29 @@
                         @enderror
                     </div>
 
-                    <!-- Subject Specialization -->
+                    <!-- Confirm Password -->
                     <div class="col-md-6 mb-3">
-                        <label for="specialization" class="form-label">Subject Specialization</label>
+                        <label for="password_confirmation" class="form-label">Confirm Password</label>
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            class="form-control"
+                            required>
+                    </div>
+
+                    <!-- Department / Specialization -->
+                    <div class="col-md-6 mb-3">
+                        <label for="department" class="form-label">Subject Specialization / Department</label>
                         <input
                             type="text"
-                            id="specialization"
-                            name="specialization"
-                            class="form-control"
+                            id="department"
+                            name="department"
+                            class="form-control @error('department') is-invalid @enderror"
                             placeholder="Mathematics, English, Physics"
-                            value="{{ old('specialization') }}"
-                            required>
+                            value="{{ old('department') }}">
 
-                        @error('specialization')
+                        @error('department')
                             <small class="text-danger">{{ $message }}</small>
                         @enderror
                     </div>
@@ -107,7 +117,7 @@
                             type="text"
                             id="phone"
                             name="phone"
-                            class="form-control"
+                            class="form-control @error('phone') is-invalid @enderror"
                             placeholder="03XXXXXXXXX"
                             value="{{ old('phone') }}"
                             required>
