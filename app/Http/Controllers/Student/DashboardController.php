@@ -25,8 +25,11 @@ class DashboardController extends Controller
         $student = Student::where('user_id', $user->id)->first();
 
         if (!$student) {
-            // If student profile doesn't exist, show error or redirect
-            return redirect()->route('dashboard')->with('error', 'Student profile not found. Please contact admin.');
+            // Redirect to login with error — NOT to /dashboard (that causes a loop)
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'No student profile found for your account. Please contact the admin.'
+            ]);
         }
 
         // Get student's enrollments
