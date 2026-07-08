@@ -56,5 +56,5 @@ php artisan route:clear 2>&1 || true
 # Storage link
 php artisan storage:link 2>&1 || true
 
-echo "=== Starting server on port ${PORT:-8000} ==="
-exec php artisan serve --host=0.0.0.0 --port=${PORT:-8000}
+echo "=== Starting server on port 8000 ==="
+exec php artisan serve --host=0.0.0.0 --port=8000

@@ -11,7 +11,8 @@ RUN apt-get update && apt-get install -y \
     libonig-dev \
     libxml2-dev \
     nodejs \
-    npm
+    npm \
+    dos2unix
 
 # Install PHP extensions
 RUN docker-php-ext-install pdo pdo_mysql zip mbstring xml gd bcmath
@@ -31,6 +32,7 @@ RUN npm ci
 RUN npm run build
 
 # Make the start script executable
+RUN dos2unix start.sh
 RUN chmod +x start.sh
 
 # Start the application using our custom start.sh script
