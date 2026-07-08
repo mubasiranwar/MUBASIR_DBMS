@@ -11,136 +11,127 @@
 
         <div class="card-body">
 
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <strong>Please fix the following errors:</strong>
+                    <ul class="mb-0 mt-1">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('teachers.store') }}" method="POST">
 
                 @csrf
 
+                {{-- ── Section 1: Personal Info ── --}}
+                <h6 class="text-muted fw-bold mb-3 border-bottom pb-2">👤 Personal Information</h6>
                 <div class="row">
 
-                    <!-- Teacher Name -->
+                    {{-- Teacher Name --}}
                     <div class="col-md-6 mb-3">
-                        <label for="name" class="form-label">Teacher Name</label>
-                        <input
-                            type="text"
-                            id="name"
-                            name="name"
-                            class="form-control"
-                            placeholder="Enter teacher name"
-                            value="{{ old('name') }}"
-                            required>
-
+                        <label for="name" class="form-label fw-semibold">Teacher Name <span class="text-danger">*</span></label>
+                        <input type="text" id="name" name="name"
+                            class="form-control @error('name') is-invalid @enderror"
+                            placeholder="e.g. Maam Sumayyea"
+                            value="{{ old('name') }}" required>
                         @error('name')
-                            <small class="text-danger">{{ $message }}</small>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Employee ID -->
+                    {{-- Employee ID --}}
                     <div class="col-md-6 mb-3">
-                        <label for="employee_id" class="form-label">Employee ID</label>
-                        <input
-                            type="text"
-                            id="employee_id"
-                            name="employee_id"
-                            class="form-control"
-                            placeholder="EMP001"
-                            value="{{ old('employee_id') }}"
-                            required>
-
+                        <label for="employee_id" class="form-label fw-semibold">Employee ID <span class="text-danger">*</span></label>
+                        <input type="text" id="employee_id" name="employee_id"
+                            class="form-control @error('employee_id') is-invalid @enderror"
+                            placeholder="e.g. EMP001"
+                            value="{{ old('employee_id') }}" required>
+                        <div class="form-text text-muted">⚠️ Enter a unique code like EMP001, T-001 — NOT an email address</div>
                         @error('employee_id')
-                            <small class="text-danger">{{ $message }}</small>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Email -->
+                    {{-- Email --}}
                     <div class="col-md-6 mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="form-control"
-                            placeholder="teacher@example.com"
-                            value="{{ old('email') }}"
-                            required>
-
+                        <label for="email" class="form-label fw-semibold">Email Address <span class="text-danger">*</span></label>
+                        <input type="email" id="email" name="email"
+                            class="form-control @error('email') is-invalid @enderror"
+                            placeholder="e.g. teacher@school.com"
+                            value="{{ old('email') }}" required>
                         @error('email')
-                            <small class="text-danger">{{ $message }}</small>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    <!-- Password -->
+                    {{-- Phone --}}
                     <div class="col-md-6 mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input
-                            type="password"
-                            id="password"
-                            name="password"
-                            class="form-control @error('password') is-invalid @enderror"
-                            required>
-
-                        @error('password')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- Confirm Password -->
-                    <div class="col-md-6 mb-3">
-                        <label for="password_confirmation" class="form-label">Confirm Password</label>
-                        <input
-                            type="password"
-                            id="password_confirmation"
-                            name="password_confirmation"
-                            class="form-control"
-                            required>
-                    </div>
-
-                    <!-- Department / Specialization -->
-                    <div class="col-md-6 mb-3">
-                        <label for="department" class="form-label">Subject Specialization / Department</label>
-                        <input
-                            type="text"
-                            id="department"
-                            name="department"
-                            class="form-control @error('department') is-invalid @enderror"
-                            placeholder="Mathematics, English, Physics"
-                            value="{{ old('department') }}">
-
-                        @error('department')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
-
-                    <!-- Phone -->
-                    <div class="col-md-6 mb-3">
-                        <label for="phone" class="form-label">Phone Number</label>
-                        <input
-                            type="text"
-                            id="phone"
-                            name="phone"
+                        <label for="phone" class="form-label fw-semibold">Phone Number</label>
+                        <input type="text" id="phone" name="phone"
                             class="form-control @error('phone') is-invalid @enderror"
-                            placeholder="03XXXXXXXXX"
-                            value="{{ old('phone') }}"
-                            required>
-
+                            placeholder="e.g. 03349256238"
+                            value="{{ old('phone') }}">
                         @error('phone')
-                            <small class="text-danger">{{ $message }}</small>
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Department --}}
+                    <div class="col-md-12 mb-3">
+                        <label for="department" class="form-label fw-semibold">Subject Specialization / Department</label>
+                        <input type="text" id="department" name="department"
+                            class="form-control @error('department') is-invalid @enderror"
+                            placeholder="e.g. Mathematics, Physics, DBMS"
+                            value="{{ old('department') }}">
+                        @error('department')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
                 </div>
 
-                <button type="submit" class="btn btn-success">
-                    Save Teacher
-                </button>
+                {{-- ── Section 2: Login Password ── --}}
+                <h6 class="text-muted fw-bold mb-3 border-bottom pb-2 mt-2">🔒 Login Password</h6>
+                <div class="row">
 
-                <a href="{{ route('teachers.index') }}" class="btn btn-secondary">
-                    Cancel
-                </a>
+                    {{-- Password --}}
+                    <div class="col-md-6 mb-3">
+                        <label for="password" class="form-label fw-semibold">Password <span class="text-danger">*</span></label>
+                        <input type="password" id="password" name="password"
+                            class="form-control @error('password') is-invalid @enderror"
+                            placeholder="Minimum 8 characters" required>
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    {{-- Confirm Password --}}
+                    <div class="col-md-6 mb-3">
+                        <label for="password_confirmation" class="form-label fw-semibold">Confirm Password <span class="text-danger">*</span></label>
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            class="form-control"
+                            placeholder="Re-enter the same password" required>
+                        <div class="form-text text-muted">⚠️ Must exactly match the password above</div>
+                    </div>
+
+                </div>
+
+                {{-- Buttons --}}
+                <div class="mt-3">
+                    <button type="submit" class="btn btn-success px-4">
+                        ✅ Save Teacher
+                    </button>
+                    <a href="{{ route('teachers.index') }}" class="btn btn-secondary ms-2">
+                        Cancel
+                    </a>
+                </div>
 
             </form>
 
         </div>
-
     </div>
 
 </div>
