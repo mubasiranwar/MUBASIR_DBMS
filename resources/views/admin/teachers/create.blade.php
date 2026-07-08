@@ -79,14 +79,14 @@
                         @enderror
                     </div>
 
-                    {{-- Department --}}
+                    {{-- Specialization --}}
                     <div class="col-md-12 mb-3">
-                        <label for="department" class="form-label fw-semibold">Subject Specialization / Department</label>
-                        <input type="text" id="department" name="department"
-                            class="form-control @error('department') is-invalid @enderror"
+                        <label for="specialization" class="form-label fw-semibold">Subject Specialization / Department</label>
+                        <input type="text" id="specialization" name="specialization"
+                            class="form-control @error('specialization') is-invalid @enderror"
                             placeholder="e.g. Mathematics, Physics, DBMS"
-                            value="{{ old('department') }}">
-                        @error('department')
+                            value="{{ old('specialization') }}">
+                        @error('specialization')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>

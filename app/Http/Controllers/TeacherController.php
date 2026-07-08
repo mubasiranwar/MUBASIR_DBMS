@@ -60,12 +60,12 @@ class TeacherController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
-            'employee_id' => 'required|unique:teachers,employee_id',
-            'department' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
+            'name'            => 'required|string|max:255',
+            'email'           => 'required|email|unique:users,email',
+            'password'        => 'required|min:8|confirmed',
+            'employee_id'     => 'required|unique:teachers,employee_id',
+            'specialization'  => 'nullable|string|max:255',
+            'phone'           => 'nullable|string|max:20',
         ]);
 
         DB::beginTransaction();
@@ -81,11 +81,10 @@ class TeacherController extends Controller
 
             // Create teacher profile
             Teacher::create([
-                'user_id' => $user->id,
-                'employee_id' => $request->employee_id,
-                'department' => $request->department,
-                'phone' => $request->phone,
-                'status' => 'active',
+                'user_id'        => $user->id,
+                'employee_id'    => $request->employee_id,
+                'specialization' => $request->specialization,
+                'phone'          => $request->phone,
             ]);
 
             DB::commit();
@@ -130,12 +129,11 @@ class TeacherController extends Controller
         $user = User::findOrFail($teacher->user_id);
 
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $user->id,
-            'employee_id' => 'required|unique:teachers,employee_id,' . $id,
-            'department' => 'nullable|string|max:255',
-            'phone' => 'nullable|string|max:20',
-            'status' => 'required|in:active,inactive',
+            'name'           => 'required|string|max:255',
+            'email'          => 'required|email|unique:users,email,' . $user->id,
+            'employee_id'    => 'required|unique:teachers,employee_id,' . $id,
+            'specialization' => 'nullable|string|max:255',
+            'phone'          => 'nullable|string|max:20',
         ]);
 
         DB::beginTransaction();
@@ -159,10 +157,9 @@ class TeacherController extends Controller
 
             // Update teacher profile
             $teacher->update([
-                'employee_id' => $request->employee_id,
-                'department' => $request->department,
-                'phone' => $request->phone,
-                'status' => $request->status,
+                'employee_id'    => $request->employee_id,
+                'specialization' => $request->specialization,
+                'phone'          => $request->phone,
             ]);
 
             DB::commit();
