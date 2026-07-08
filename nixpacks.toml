@@ -19,7 +19,7 @@ nixPkgs = [
 
 [phases.install]
 cmds = [
-  "composer install --no-dev --optimize-autoloader --no-interaction",
+  "APP_URL=http://localhost composer install --no-dev --optimize-autoloader --no-interaction",
   "npm ci --prefer-offline",
   "npm run build"
 ]
