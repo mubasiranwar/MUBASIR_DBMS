@@ -107,7 +107,7 @@ class DashboardController extends Controller
             $passedSubjects = 0;
 
             foreach ($studentMarks as $mark) {
-                $score = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                $score = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
                 $totalMarks += $score;
                 $allScores[] = $score;
 
@@ -214,7 +214,7 @@ class DashboardController extends Controller
             $passedSubjects = 0;
 
             foreach ($studentMarks as $mark) {
-                $score = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                $score = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
                 $totalMarks += $score;
 
                 if ($score >= 40) {
@@ -290,7 +290,7 @@ class DashboardController extends Controller
 
         foreach ($students as $student) {
             $avg = $student->marks->avg(function($mark) {
-                return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             });
             
             if ($avg > 0) {
@@ -363,7 +363,7 @@ class DashboardController extends Controller
 
             foreach ($students as $student) {
                 $avg = $student->marks->avg(function($mark) {
-                    return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                    return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
                 });
                 
                 fputcsv($file, [
@@ -394,7 +394,7 @@ class DashboardController extends Controller
         $performanceData = [];
         foreach ($students as $student) {
             $avg = $student->marks->avg(function($mark) {
-                return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             });
             
             $performanceData[] = [
@@ -419,10 +419,10 @@ class DashboardController extends Controller
 
         $performanceData = [];
         foreach ($marks as $mark) {
-            $score = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+            $score = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             $performanceData[] = [
                 'student' => $mark->student,
-                'marks_obtained' => $mark->marks_obtained,
+                'marks_obtained' => $mark->obtained_marks,
                 'total_marks' => $mark->total_marks,
                 'percentage' => round($score, 2),
                 'status' => $score >= 40 ? 'Pass' : 'Fail'
@@ -442,10 +442,10 @@ class DashboardController extends Controller
 
         $performanceData = [];
         foreach ($marks as $mark) {
-            $score = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+            $score = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             $performanceData[] = [
                 'exam' => $mark->examTimetable,
-                'marks_obtained' => $mark->marks_obtained,
+                'marks_obtained' => $mark->obtained_marks,
                 'total_marks' => $mark->total_marks,
                 'percentage' => round($score, 2),
                 'status' => $score >= 40 ? 'Pass' : 'Fail'
@@ -453,7 +453,7 @@ class DashboardController extends Controller
         }
 
         $averageScore = $marks->avg(function($mark) {
-            return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+            return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
         });
 
         return view('admin.performance.student', compact('student', 'performanceData', 'averageScore'));
@@ -472,7 +472,7 @@ class DashboardController extends Controller
         $passedStudents = 0;
 
         foreach ($marks as $mark) {
-            $score = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+            $score = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             $status = $score >= 40 ? 'Pass' : 'Fail';
             
             if ($status == 'Pass') {
@@ -481,7 +481,7 @@ class DashboardController extends Controller
 
             $performanceData[] = [
                 'student' => $mark->student,
-                'marks_obtained' => $mark->marks_obtained,
+                'marks_obtained' => $mark->obtained_marks,
                 'total_marks' => $mark->total_marks,
                 'percentage' => round($score, 2),
                 'status' => $status
@@ -514,7 +514,7 @@ class DashboardController extends Controller
                     
                     foreach ($students as $student) {
                         $avg = $student->marks->avg(function($mark) {
-                            return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                            return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
                         });
                         if ($avg > 0) {
                             $averages[] = $avg;
@@ -582,7 +582,7 @@ class DashboardController extends Controller
         ];
 
         foreach ($marks as $mark) {
-            $percentage = ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+            $percentage = ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
             
             if ($percentage >= 90) $distribution['A+']++;
             elseif ($percentage >= 80) $distribution['A']++;

@@ -21,7 +21,10 @@ class DashboardController extends Controller
         $teacher = Auth::user()->teacher;
 
         if (!$teacher) {
-            abort(403, 'Teacher not found');
+            Auth::logout();
+            return redirect()->route('login')->withErrors([
+                'email' => 'No teacher profile found for your account. Please contact the admin.'
+            ]);
         }
 
         // Get teacher's subject IDs
