@@ -60,7 +60,7 @@
                         <td>
                             @php
                                 $avg = $student->marks->avg(function($mark) {
-                                    return ($mark->total_marks > 0) ? ($mark->marks_obtained / $mark->total_marks * 100) : 0;
+                                    return ($mark->total_marks > 0) ? ($mark->obtained_marks / $mark->total_marks * 100) : 0;
                                 });
                             @endphp
                             {{ round($avg, 2) }}%

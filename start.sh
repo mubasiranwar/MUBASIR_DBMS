@@ -1,22 +1,29 @@
 #!/bin/bash
+set -e
 
-# Install dependencies
-composer install --no-dev --optimize-autoloader
+echo "=== Starting Laravel Deployment ==="
 
-# Generate app key if not exists
-php artisan key:generate --force
+# Generate app key if not set
+if [ -z "$APP_KEY" ]; then
+    php artisan key:generate --force
+fi
 
-# Run migrations
+# Run database migrations
+echo "--- Running migrations..."
 php artisan migrate --force
 
-# Clear and cache config
-php artisan config:clear
+# Seed admin user
+echo "--- Seeding database..."
+php artisan db:seed --class=AdminSeeder --force
+
+# Cache for production
+echo "--- Caching config/routes/views..."
 php artisan config:cache
 php artisan route:cache
 php artisan view:cache
 
-# Create storage link
-php artisan storage:link
+# Storage link
+php artisan storage:link 2>/dev/null || true
 
-# Start the application
-php artisan serve --host=0.0.0.0 --port=$PORT
+echo "=== Starting Server on port ${PORT:-8000} ==="
+php artisan serve --host=0.0.0.0 --port=${PORT:-8000}

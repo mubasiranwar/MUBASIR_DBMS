@@ -25,11 +25,23 @@ class Student extends Model
         return $this->hasMany(StudentEnrollment::class);
     }
 
+    public function latestEnrollment()
+    {
+        return $this->hasOne(StudentEnrollment::class)->latest()->with('classSection.schoolClass');
+    }
+
     // Accessor to get roll number from enrollment
     public function getRollNoAttribute()
     {
         $enrollment = $this->enrollments()->latest()->first();
         return $enrollment ? $enrollment->roll_no : null;
+    }
+
+    // Accessor to get schoolClass via latest enrollment
+    public function getSchoolClassAttribute()
+    {
+        $enrollment = $this->enrollments()->latest()->with('classSection.schoolClass')->first();
+        return $enrollment ? $enrollment->classSection->schoolClass : null;
     }
 
     public function marks()

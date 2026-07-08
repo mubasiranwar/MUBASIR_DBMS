@@ -386,7 +386,10 @@ class DashboardController extends Controller
     public function classPerformance($classId)
     {
         $class = SchoolClass::findOrFail($classId);
-        $students = Student::where('school_class_id', $classId)->with('marks')->get();
+        $studentIds = \App\Models\StudentEnrollment::whereHas('classSection', function($q) use ($classId) {
+            $q->where('school_class_id', $classId);
+        })->pluck('student_id');
+        $students = Student::whereIn('id', $studentIds)->with('marks')->get();
         
         $performanceData = [];
         foreach ($students as $student) {
@@ -503,7 +506,10 @@ class DashboardController extends Controller
             foreach ($selectedClasses as $classId) {
                 $class = SchoolClass::find($classId);
                 if ($class) {
-                    $students = Student::where('school_class_id', $classId)->with('marks')->get();
+                    $studentIds = \App\Models\StudentEnrollment::whereHas('classSection', function($q) use ($classId) {
+                        $q->where('school_class_id', $classId);
+                    })->pluck('student_id');
+                    $students = Student::whereIn('id', $studentIds)->with('marks')->get();
                     $averages = [];
                     
                     foreach ($students as $student) {

@@ -55,7 +55,7 @@ Route::get('/dashboard', function () {
     }
     
     return redirect()->route('login');
-})->middleware(['auth', 'verified'])->name('dashboard');
+})->middleware(['auth'])->name('dashboard');
 
 /*
 |--------------------------------------------------------------------------

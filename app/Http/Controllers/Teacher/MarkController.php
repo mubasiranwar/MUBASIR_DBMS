@@ -140,7 +140,6 @@ public function save(Request $request)
     $request->validate([
         'exam_timetable_id' => 'required|exists:exam_timetables,id',
         'subject_id' => 'required|exists:subjects,id',
-        'exam_id' => 'required|exists:exam_types,id',
         'marks' => 'required|array',
         'marks.*.obtained' => 'required|numeric|min:0',
         'marks.*.total' => 'required|numeric|min:1',
@@ -174,7 +173,6 @@ public function save(Request $request)
             ],
             [
                 'teacher_id' => $teacher->id,
-                'exam_id' => $request->exam_id,
                 'total_marks' => $mark['total'],
                 'obtained_marks' => $mark['obtained'],
                 'remarks' => $mark['remarks'] ?? null,
