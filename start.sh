@@ -42,9 +42,13 @@ if grep -q "APP_KEY=$" .env || grep -q "APP_KEY= *$" .env; then
     php artisan key:generate --force
 fi
 
-# Run database migrations
+# Run database migrations (exit on failure so Railway logs show the real error)
 echo "--- Running migrations..."
-php artisan migrate --force 2>&1 || echo "[WARN] Migration issue - continuing..."
+php artisan migrate --force
+if [ $? -ne 0 ]; then
+    echo "[ERROR] Migration failed! Check DB credentials and connectivity."
+    exit 1
+fi
 
 # Seed admin user
 echo "--- Seeding admin..."
